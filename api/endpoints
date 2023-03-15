@@ -1,0 +1,16 @@
+GET servers
+- id
+- status
+- users
+- serverName
+
+
+POST server
+- serverName
+
+PUT server
+- id
+- action
+
+DELETE server
+- id
