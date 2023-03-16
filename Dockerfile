@@ -10,4 +10,4 @@ EXPOSE 80
 
 RUN dotnet build
 
-ENTRYPOINT ["dotnet", "run", "--project", "api", "--urls=http://0.0.0.0:80"]
+ENTRYPOINT ["dotnet", "run", "--project", "api"]

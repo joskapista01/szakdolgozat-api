@@ -24,6 +24,7 @@ namespace api.Monitoring
         {   
             client.BaseAddress  = new Uri(deployerAddress);
         }
+        
         public async Task<ServerMonitorData> GetServerState(string hostname, int port)
         {
             GetServerInfoRequest body = new GetServerInfoRequest(hostname, port);
