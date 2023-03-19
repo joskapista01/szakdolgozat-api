@@ -37,7 +37,8 @@ builder.WebHost.UseKestrel(serverOptions =>
         config.AddJsonFile("appsettings."+env+".json",
                             optional: false, reloadOnChange: true);
 
-        logger.LogInformation(builder.Configuration["FrontendHostname"]);
+        logger.LogInformation(builder.Configuration["MonitorConnection:Hostname"]);
+        logger.LogInformation(builder.Configuration["DeployerConnection:Hostname"]);
     });
     builder.Services.AddSingleton<IServerService, ServerService>();
     builder.Services.AddSingleton<IUserService, UserService>();

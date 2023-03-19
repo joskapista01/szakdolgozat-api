@@ -17,7 +17,12 @@ public class ServerService : IServerService
     private const int SERVER_CHECK_INTERVAL = 10000; //milisec
     private const int SERVER_MAXIMUM_IDLE_TIME = 60000; //millisec
 
-    private const string SERVERS_HOSTNAME = "servers.minecraft-hosting.io";
+    private string GetServerHostname(string id) 
+    {
+        return "minecraft-server-"+id+".servers.svc.cluster.local";
+    } 
+
+    private const int DEFAULT_SERVER_PORT = 25565;
 
     private readonly IDatabaseClient _databaseClient;
     private readonly IServerMonitor _serverMonitor;
@@ -49,7 +54,7 @@ public class ServerService : IServerService
             serverCatalog[1] = new Dictionary<string, long>();
             foreach (Server server in activeServers)
             {
-                ServerMonitorData serverInfo = await _serverMonitor.GetServerState(SERVERS_HOSTNAME, server.serverPort);
+                ServerMonitorData serverInfo = await _serverMonitor.GetServerState(GetServerHostname(server.id), DEFAULT_SERVER_PORT);
 
                 if(serverInfo.playerCount == 0 && serverInfo.state == "online")
                 {
@@ -88,7 +93,7 @@ public class ServerService : IServerService
     public async Task<GetServerResponse> GetServerInfo(string id,string user)
     {
         Server serverInfo = _databaseClient.getServerInfo(id,user);
-        ServerMonitorData serverMonitorData = await _serverMonitor.GetServerState(SERVERS_HOSTNAME, serverInfo.serverPort); 
+        ServerMonitorData serverMonitorData = await _serverMonitor.GetServerState(GetServerHostname(id), DEFAULT_SERVER_PORT); 
 
         if(serverInfo is not null){
             return new GetServerResponse(serverInfo.id, serverInfo.serverName, serverMonitorData.playerCount, serverInfo.serverStatus, serverMonitorData.state, (serverInfo.serverUrl+":"+serverInfo.serverPort)); 
