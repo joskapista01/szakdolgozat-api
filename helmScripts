@@ -1,2 +1,0 @@
-helm uninstall api -n apps
-helm install api ./helm/api -n apps

@@ -4,6 +4,8 @@ using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Headers;
 using System.Text;
+using Api.Exception;
+using api.Handlers.ApiExceptionHandler;
 
 namespace api.Controllers;
 
@@ -22,9 +24,15 @@ public class UserController : ControllerBase
     [HttpPost("/users/register")]
     public IActionResult RegisterUser(RegisterUserRequest request)
     {
-        _userService.RegisterUser(request);
-        
+        try {
+            _userService.RegisterUser(request);
+        }
+        catch (Exception e)
+        {
+            if(typeof(e).IsSubclassOf(typeof(ApiException)))
+        }
         return Ok(request);
+        
     }
 
     [Authorize]
@@ -35,14 +43,16 @@ public class UserController : ControllerBase
     } 
 
     private string getCurrentUser(){
-        try {
+        try 
+        {
             var headerValue = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
             var bytes = Convert.FromBase64String(headerValue.Parameter);
             string credentials = Encoding.UTF8.GetString(bytes);
             string username = credentials.Split(":")[0];
             return username;
-        } catch(Exception e){
-            Console.WriteLine("Error, unauthorized request is trying to access username field!");
+        } 
+        catch(Exception e)
+        {
             return "";
         }
         
