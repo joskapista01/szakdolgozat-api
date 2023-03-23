@@ -86,9 +86,7 @@ public class ApiExceptionHandler
 
     private static IActionResult HandleDatabaseException(DatabaseException e)
     {
-        Type exceptionType = e.GetType();
-
-        if(exceptionType == typeof(UsernameAlreadyTakenException))
+        if(DerivesFrom(e,typeof(UsernameAlreadyTakenException)))
         {
             return new BadRequestObjectResult(ToJson(e.Message));
         } 
