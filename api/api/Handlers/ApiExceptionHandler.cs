@@ -81,6 +81,13 @@ public class ApiExceptionHandler
 
     private static IActionResult HandleDatabaseException(DatabaseException e)
     {
+        Type exceptionType = e.GetType();
+
+        if(exceptionType == typeof(UsernameAlreadyTakenException))
+        {
+            return new BadRequestObjectResult(e.Message);
+        } 
+
         Console.WriteLine(e.Message);
         return new StatusCodeResult(StatusCodes.Status500InternalServerError); 
     }

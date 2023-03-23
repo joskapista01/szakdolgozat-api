@@ -67,7 +67,7 @@ namespace api.Persistence
             lock(users)
             {
                 if(users.FirstOrDefault(e => e.username == username) != null)
-                    throw new RegisterUserException("Username already taken!");
+                    throw new UsernameAlreadyTakenException("Username already taken!");
 
                 User user = new User(username, password);
                 users.Add(user);
