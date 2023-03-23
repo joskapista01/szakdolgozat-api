@@ -10,6 +10,7 @@ using api.Deploying;
 using System.Diagnostics;
 using api.Exceptions;
 using api.Services.Helpers;
+using System.Net;
 
 public class ServerService : IServerService
 {
@@ -102,7 +103,7 @@ public class ServerService : IServerService
         return new GetServerResponse(serverInfo.id, serverInfo.serverName, serverMonitorData.playerCount, serverInfo.serverStatus, serverMonitorData.state, (serverInfo.serverUrl+":"+serverInfo.serverPort)); 
 
     }
-    public async void CreateServer(CreateServerRequest request, string user)
+    public async Task<HttpStatusCode> CreateServer(CreateServerRequest request, string user)
     {   
         ServerCreation.ValidateServerName(request.name);     
 
@@ -115,23 +116,27 @@ public class ServerService : IServerService
 
         Server server = new Server(serverId, user, request.name, createdAt, serverUrl, serverPort, serverStatus);
 
-        await _serverDeployer.CreateServer(serverId, serverPort);
+        var response = await _serverDeployer.CreateServer(serverId, serverPort);
         _databaseClient.createServer(server);
+        return response;
     }
 
-    public async void UpdateServer(string id,string user)
+    public async Task<HttpStatusCode> UpdateServer(string id,string user)
     {
         Server serverInfo = _databaseClient.getServerInfo(id,user);
-        if(serverInfo is null) return;
+        if(serverInfo is null) 
+            throw new DatabaseException("Server info is null!");
 
         (string new_status, int replicaCount) = serverInfo.serverStatus == "ON" ? ("OFF",0) : ("ON",1);
 
-        await _serverDeployer.UpdateServer(id, replicaCount);
+        var response = await _serverDeployer.UpdateServer(id, replicaCount);
         _databaseClient.updateServerStatus(id,user,new_status);
+        return response;
     }
-    public async void DeleteServer(string id,string user)
+    public async Task<HttpStatusCode> DeleteServer(string id,string user)
     {
-        await _serverDeployer.DeleteServer(id);
+        var response = await _serverDeployer.DeleteServer(id);
         _databaseClient.deleteServer(id,user);
+        return response;
     }
 }

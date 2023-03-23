@@ -57,13 +57,13 @@ public class ServerController : ControllerBase
         }
     }
     [HttpPost("/server")]
-    public IActionResult CreateServer(CreateServerRequest request)
+    public async Task<IActionResult> CreateServer(CreateServerRequest request)
     {
         try
         {
             string user = RequestHeaders.GetCurrentUser(Request);
 
-            _serverService.CreateServer(request, user);
+            await _serverService.CreateServer(request, user);
 
             return Ok(request);
         }
