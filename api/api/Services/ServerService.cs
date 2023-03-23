@@ -8,22 +8,11 @@ using System.Net.Http.Headers;
 using System.Web;
 using api.Deploying;
 using System.Diagnostics;
+using api.Exceptions;
+using api.Services.Helpers;
 
 public class ServerService : IServerService
 {
-
-    private int id;
-
-    private const int SERVER_CHECK_INTERVAL = 10000; //milisec
-    private const int SERVER_MAXIMUM_IDLE_TIME = 60000; //millisec
-
-    private string GetServerHostname(string id) 
-    {
-        return "minecraft-server-"+id+".servers.svc.cluster.local";
-    } 
-
-    private const int DEFAULT_SERVER_PORT = 25565;
-
     private readonly IDatabaseClient _databaseClient;
     private readonly IServerMonitor _serverMonitor;
     private readonly IServerDeployer _serverDeployer;
@@ -31,10 +20,19 @@ public class ServerService : IServerService
         _databaseClient = databaseClient;
         _serverMonitor = serverMonitor;
         _serverDeployer = serverDeployer;
-        id = 20000;
         Task.Run(() => ServerHealthCheck());
     }
     
+    private int GetNextId()
+    {
+        for(int port = ServerConventions.START_PORT; port<=ServerConventions.END_PORT; port++)
+        {
+            if(!_databaseClient.IsPortAllocated(port))
+                return port;
+        }
+        throw new OutOfPortsException("Run out of free ports!");
+    }
+
     private async void ServerHealthCheck() 
     {
         IDictionary<string, long>[] serverCatalog = {
@@ -46,41 +44,47 @@ public class ServerService : IServerService
 
         while(true) 
         {
-            Thread.Sleep(SERVER_CHECK_INTERVAL);
-            List<Server> activeServers = _databaseClient.getActiveServers();
-
-
-
-            serverCatalog[1] = new Dictionary<string, long>();
-            foreach (Server server in activeServers)
+            try
             {
-                ServerMonitorData serverInfo = await _serverMonitor.GetServerState(GetServerHostname(server.id), DEFAULT_SERVER_PORT);
+                Thread.Sleep(ServerConventions.SERVER_CHECK_INTERVAL);
+                List<Server> activeServers = _databaseClient.getActiveServers();
 
-                if(serverInfo.playerCount == 0 && serverInfo.state == "online")
+
+
+                serverCatalog[1] = new Dictionary<string, long>();
+                foreach (Server server in activeServers)
                 {
-                    if(serverCatalog[0].ContainsKey(server.id)){
-                        Console.WriteLine(currentTime);
-                        Console.WriteLine("contains " + (currentTime - serverCatalog[0][server.id]));
-                        if(currentTime - serverCatalog[0][server.id] >= SERVER_MAXIMUM_IDLE_TIME)
-                        {
-                            Console.WriteLine("goof");
-                            UpdateServer(server.id, server.user);
+                    ServerMonitorData serverInfo = await _serverMonitor.GetServerState(ServerConventions.GetServerHostname(server.id), ServerConventions.DEFAULT_SERVER_PORT);
+
+                    if(serverInfo.playerCount == 0 && serverInfo.state == "online")
+                    {
+                        if(serverCatalog[0].ContainsKey(server.id)){
+                            Console.WriteLine(currentTime);
+                            Console.WriteLine("contains " + (currentTime - serverCatalog[0][server.id]));
+                            if(currentTime - serverCatalog[0][server.id] >= ServerConventions.SERVER_MAXIMUM_IDLE_TIME)
+                            {
+                                Console.WriteLine("goof");
+                                UpdateServer(server.id, server.user);
+                            }
+                            else
+                            {
+                                serverCatalog[1][server.id] = serverCatalog[0][server.id];
+                            }
                         }
                         else
                         {
-                            serverCatalog[1][server.id] = serverCatalog[0][server.id];
+                            serverCatalog[1][server.id] = currentTime;
                         }
                     }
-                    else
-                    {
-                        serverCatalog[1][server.id] = currentTime;
-                    }
-                }
-                
+                    
 
+                }
+                serverCatalog[0] = new Dictionary<string, long>(serverCatalog[1]);
+                currentTime+=ServerConventions.SERVER_CHECK_INTERVAL;
+            } catch(Exception e)
+            {
+                Console.WriteLine("[ERROR] Internal server error. ServerHealthCheck failed: " + e.Message);
             }
-            serverCatalog[0] = new Dictionary<string, long>(serverCatalog[1]);
-            currentTime+=SERVER_CHECK_INTERVAL;
             
         }
     }
@@ -93,27 +97,26 @@ public class ServerService : IServerService
     public async Task<GetServerResponse> GetServerInfo(string id,string user)
     {
         Server serverInfo = _databaseClient.getServerInfo(id,user);
-        ServerMonitorData serverMonitorData = await _serverMonitor.GetServerState(GetServerHostname(id), DEFAULT_SERVER_PORT); 
+        ServerMonitorData serverMonitorData = await _serverMonitor.GetServerState(ServerConventions.GetServerHostname(id),ServerConventions.DEFAULT_SERVER_PORT); 
 
-        if(serverInfo is not null){
-            return new GetServerResponse(serverInfo.id, serverInfo.serverName, serverMonitorData.playerCount, serverInfo.serverStatus, serverMonitorData.state, (serverInfo.serverUrl+":"+serverInfo.serverPort)); 
-        }
-        return null;
+        return new GetServerResponse(serverInfo.id, serverInfo.serverName, serverMonitorData.playerCount, serverInfo.serverStatus, serverMonitorData.state, (serverInfo.serverUrl+":"+serverInfo.serverPort)); 
+
     }
     public void CreateServer(CreateServerRequest request, string user)
-    {        
-        string serverId = id.ToString();
+    {   
+        ServerCreation.ValidateServerName(request.name);     
+
+        string serverId = GetNextId().ToString();
         string serverName = request.name;
         DateTime createdAt = DateTime.Now;
         string serverUrl = "servers.minecraft-hosting.io";
-        int serverPort = id;
+        int serverPort = int.Parse(serverId);
         string serverStatus = "ON";
 
         Server server = new Server(serverId, user, request.name, createdAt, serverUrl, serverPort, serverStatus);
 
         _serverDeployer.CreateServer(serverId, serverPort);
         _databaseClient.createServer(server);
-        id++;
     }
 
     public void UpdateServer(string id,string user)
@@ -131,5 +134,4 @@ public class ServerService : IServerService
         _serverDeployer.DeleteServer(id);
         _databaseClient.deleteServer(id,user);
     }
-
 }

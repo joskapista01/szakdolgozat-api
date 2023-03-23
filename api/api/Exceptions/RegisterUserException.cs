@@ -1,12 +1,12 @@
 namespace api.Exceptions;
 
-public class RegisterUserException : Exception {
+public class RegisterUserException : ApiException {
     
     public RegisterUserException() { }
 
     public RegisterUserException(string message)
         : base(message) { }
 
-    public RegisterUser(string message, Exception inner)
+    public RegisterUserException(string message, Exception inner)
         : base(message, inner) { }
 }

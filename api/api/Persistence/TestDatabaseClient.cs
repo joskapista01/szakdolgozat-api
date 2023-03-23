@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Models;
-using Api.Exceptions;
+using api.Exceptions;
 
 namespace api.Persistence
 {
@@ -94,6 +94,14 @@ namespace api.Persistence
             {
                 List<Server> result = servers.FindAll(s => s.serverStatus == "ON").ToList();
                 return result;
+            }
+        }
+
+        public bool IsPortAllocated(int port)
+        {
+            lock(servers)
+            {
+                return servers.FindIndex(e => e.serverPort==port) >= 0;
             }
         }
     }

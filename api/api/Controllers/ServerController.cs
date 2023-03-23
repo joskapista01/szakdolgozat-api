@@ -4,6 +4,8 @@ using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Headers;
 using System.Text;
+using api.Handlers;
+using api.Controllers.Helpers;
 
 namespace api.Controllers;
 
@@ -22,64 +24,86 @@ public class ServerController : ControllerBase
     [HttpGet("/servers")]
     public IActionResult GetServerList()
     {
-
-        string user = getCurrentUser();
-
-        var response = _serverService.GetServerList(user);
-        return Ok(response);
+        try 
+        {
+            string user = RequestHeaders.GetCurrentUser(Request);
+            var response = _serverService.GetServerList(user);
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return ApiExceptionHandler.HandleException(e);
+        }
+        
     }
 
     [HttpGet("/server/{id}")]
     public async Task<IActionResult> GetServer(string id)
     {
-        string user = getCurrentUser();        
+        try
+        {
+            string user = RequestHeaders.GetCurrentUser(Request);
 
-        var response = await _serverService.GetServerInfo(id, user);
+            var response = await _serverService.GetServerInfo(id, user);
 
-        if(response is not null)
-            return Ok(response);
-        else 
-            return NotFound(id);
+            if(response is not null)
+                return Ok(response);
+            else 
+                return NotFound(id);
+        }
+        catch (Exception e)
+        {
+            return ApiExceptionHandler.HandleException(e);
+        }
     }
     [HttpPost("/server")]
     public IActionResult CreateServer(CreateServerRequest request)
     {
-        string user = getCurrentUser();
+        try
+        {
+            string user = RequestHeaders.GetCurrentUser(Request);
 
+            _serverService.CreateServer(request, user);
 
-        _serverService.CreateServer(request, user);
-        return Ok(request);
+            return Ok(request);
+        }
+        catch (Exception e)
+        {
+            return ApiExceptionHandler.HandleException(e);
+        }
     }
 
     [HttpPut("/server/{id}")]
     public IActionResult UpdateServer(string id)
     {
-        string user = getCurrentUser();
+        try
+        {
+            string user = RequestHeaders.GetCurrentUser(Request);
 
-        _serverService.UpdateServer(id, user);
-        return Ok(id);
+            _serverService.UpdateServer(id, user);
+
+            return Ok(id);
+        }
+        catch (Exception e)
+        {
+            return ApiExceptionHandler.HandleException(e);
+        }
     }
 
     [HttpDelete("/server/{id}")]
     public IActionResult DeleteServer(string id) {
-        string user = getCurrentUser();
+        try
+        {
+            string user = RequestHeaders.GetCurrentUser(Request);
 
-        _serverService.DeleteServer(id, user); 
-        return Ok(id);
-    }
+            _serverService.DeleteServer(id, user);
 
-    private string getCurrentUser(){
-        try {
-            var headerValue = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
-            var bytes = Convert.FromBase64String(headerValue.Parameter);
-            string credentials = Encoding.UTF8.GetString(bytes);
-            string username = credentials.Split(":")[0];
-            return username;
-        } catch(Exception e){
-            Console.WriteLine("Error, unauthorized request is trying to access username field!");
-            return "";
+            return Ok(id);
         }
-        
+        catch (Exception e)
+        {
+            return ApiExceptionHandler.HandleException(e);
+        }
     }
 }
 

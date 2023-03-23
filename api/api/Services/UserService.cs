@@ -5,6 +5,8 @@ using api.Persistence;
 using api.Exceptions;
 using System;
 
+using api.Services.Helpers;
+
 
 
 public class UserService : IUserService
@@ -18,7 +20,7 @@ public class UserService : IUserService
 
     public void RegisterUser(RegisterUserRequest request)
     {
-        ValidateNewCredentials(request)
+        UserRegistration.ValidateNewCredentials(request.username, request.password);
         try 
         {
             _databaseClient.addUser(request.username, request.password);
@@ -30,34 +32,6 @@ public class UserService : IUserService
         
     }
 
-    private void ValidateNewCredentials(RegisterUserRequest request)
-    {
-        return ValidateUsername(request.username) && ValidatePassword(request.password);
-    }
 
-    private bool ValidateUsername(string username)
-    {
-        if(username.length >= 4 && IsAlphaNumeric(username))
-            return true
-        
-        throw new RegisterUserException("Invalid username!");
-    }
 
-    private bool ValidatePassword(string password)
-    {
-        if(password.length >= 8 && IsAlphaNumeric(username) && password.Any(char.IsDigit) && password.Any(char.IsLower) && password.Any(char.IsUpper)) 
-            return true
-        
-        throw new RegisterUserException("Invalid password!");
-    }
-
-    private bool IsAlphaNumeric(string text)
-    {
-        foreach (char c in text)
-        {
-            if(!IsLetterOrDigit(c))
-                return false; 
-        }
-        return true;
-    }
 }

@@ -4,8 +4,9 @@ using api.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Headers;
 using System.Text;
-using Api.Exception;
-using api.Handlers.ApiExceptionHandler;
+using api.Exceptions;
+using api.Handlers;
+using api.Controllers.Helpers;
 
 namespace api.Controllers;
 
@@ -26,12 +27,13 @@ public class UserController : ControllerBase
     {
         try {
             _userService.RegisterUser(request);
+            return Ok(request);
         }
         catch (Exception e)
         {
-            if(typeof(e).IsSubclassOf(typeof(ApiException)))
+            return ApiExceptionHandler.HandleException(e);
         }
-        return Ok(request);
+        
         
     }
 
@@ -39,23 +41,7 @@ public class UserController : ControllerBase
     [HttpPost("/users/login")]
     public IActionResult LoginUser()
     {
-        return Ok(new LoginResponse(getCurrentUser()));
+        return Ok(new LoginResponse(RequestHeaders.GetCurrentUser(Request)));
     } 
-
-    private string getCurrentUser(){
-        try 
-        {
-            var headerValue = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
-            var bytes = Convert.FromBase64String(headerValue.Parameter);
-            string credentials = Encoding.UTF8.GetString(bytes);
-            string username = credentials.Split(":")[0];
-            return username;
-        } 
-        catch(Exception e)
-        {
-            return "";
-        }
-        
-    }
 }
 

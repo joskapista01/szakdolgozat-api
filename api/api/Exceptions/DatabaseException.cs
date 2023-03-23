@@ -1,6 +1,6 @@
 namespace api.Exceptions;
 
-public class DatabaseException : Exception {
+public class DatabaseException : ApiException {
     
     public DatabaseException() { }
 
