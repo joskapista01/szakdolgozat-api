@@ -78,7 +78,11 @@ public class ApiExceptionHandler
         else if (DerivesFrom(e,typeof(InvalidPasswordException)))
         {
             return new BadRequestObjectResult(ToJson(e.Message));
-        } 
+        }
+        else if(DerivesFrom(e,typeof(UsernameAlreadyTakenException)))
+        {
+            return new BadRequestObjectResult(ToJson(e.Message));
+        }  
 
         Console.WriteLine(e.Message);
         return new StatusCodeResult(StatusCodes.Status500InternalServerError);
@@ -86,10 +90,6 @@ public class ApiExceptionHandler
 
     private static IActionResult HandleDatabaseException(DatabaseException e)
     {
-        if(DerivesFrom(e,typeof(UsernameAlreadyTakenException)))
-        {
-            return new BadRequestObjectResult(ToJson(e.Message));
-        } 
 
         Console.WriteLine(e.Message);
         return new StatusCodeResult(StatusCodes.Status500InternalServerError); 
