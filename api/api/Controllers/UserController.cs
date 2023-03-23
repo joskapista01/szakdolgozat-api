@@ -25,14 +25,14 @@ public class UserController : ControllerBase
     [HttpPost("/users/register")]
     public IActionResult RegisterUser(RegisterUserRequest request)
     {
-        //try {
+        try {
             _userService.RegisterUser(request);
             return Ok(request);
-        //}
-        //catch (Exception e)
-        //{
-          //  return ApiExceptionHandler.HandleException(e);
-        //}
+        }
+        catch (Exception e)
+        {
+            return ApiExceptionHandler.HandleException(e);
+        }
         
         
     }

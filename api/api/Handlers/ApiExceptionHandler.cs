@@ -6,9 +6,14 @@ namespace api.Handlers;
 
 public class ApiExceptionHandler
 {
+
+    private static bool DerivesFrom(Exception e, Type t)
+    {
+        return e.GetType().IsSubclassOf(t) || e.GetType() == t;
+    }
     public static IActionResult HandleException(Exception e)
     {
-        if(e.GetType().IsSubclassOf(typeof(ApiException)))
+        if(DerivesFrom(e, typeof(ApiException)))
                 return ApiExceptionHandler.HandleApiException((ApiException) e);
 
         Console.WriteLine(e.Message);
@@ -18,29 +23,27 @@ public class ApiExceptionHandler
 
     private static IActionResult HandleApiException(ApiException e)
     {
-        Type exceptionType = e.GetType();
-
-        if(exceptionType.IsSubclassOf(typeof(CreateServerException)))
+        if(DerivesFrom(e,typeof(CreateServerException)))
         {
             return HandleCreateServerExceptions((CreateServerException) e);
         }
-        else if(exceptionType.IsSubclassOf(typeof(RegisterUserException)))
+        else if(DerivesFrom(e,typeof(RegisterUserException)))
         {
             return HandleRegisterUserExceptions((RegisterUserException) e);
         }
-        else if(exceptionType.IsSubclassOf(typeof(DatabaseException)))
+        else if(DerivesFrom(e,typeof(DatabaseException)))
         {
             return HandleDatabaseException((DatabaseException) e);
         }
-        else if(exceptionType.IsSubclassOf(typeof(MonitorException)))
+        else if(DerivesFrom(e,typeof(MonitorException)))
         {
             return HandleMonitorException((MonitorException) e);
         }
-        else if(exceptionType.IsSubclassOf(typeof(DeployerException)))
+        else if(DerivesFrom(e,typeof(DeployerException)))
         {
             return HandleDeployerException((DeployerException) e);
         }
-        else if(exceptionType.IsSubclassOf(typeof(OutOfPortsException)))
+        else if(DerivesFrom(e,typeof(OutOfPortsException)))
         {
             return HandlOutOfPortsException((OutOfPortsException) e);
         }
@@ -50,9 +53,7 @@ public class ApiExceptionHandler
 
     private static IActionResult HandleCreateServerExceptions(CreateServerException e)
     {
-        Type exceptionType = e.GetType();
-
-        if(exceptionType == typeof(InvalidServerNameException))
+        if(DerivesFrom(e,typeof(InvalidServerNameException)))
         {
             return new BadRequestObjectResult(e.Message);
         }
@@ -64,13 +65,11 @@ public class ApiExceptionHandler
 
     private static IActionResult HandleRegisterUserExceptions(RegisterUserException e)
     {
-        Type exceptionType = e.GetType();
-
-        if(exceptionType == typeof(InvalidUsernameException))
+        if(DerivesFrom(e,typeof(InvalidUsernameException)))
         {
             return new BadRequestObjectResult(e.Message);
         } 
-        else if (exceptionType == typeof(InvalidPasswordException))
+        else if (DerivesFrom(e,typeof(InvalidPasswordException)))
         {
             return new BadRequestObjectResult(e.Message);
         } 
