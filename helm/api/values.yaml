@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-buildVersion: 1679605049
+buildVersion: 1679605592
 
 replicaCount: 1
 
