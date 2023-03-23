@@ -11,6 +11,12 @@ public class ApiExceptionHandler
     {
         return e.GetType().IsSubclassOf(t) || e.GetType() == t;
     }
+
+    private static string ToJson(string message)
+    {
+        return "{\"message:\": \""+ message+"\"}";
+    }
+
     public static IActionResult HandleException(Exception e)
     {
         if(DerivesFrom(e, typeof(ApiException)))
@@ -55,7 +61,7 @@ public class ApiExceptionHandler
     {
         if(DerivesFrom(e,typeof(InvalidServerNameException)))
         {
-            return new BadRequestObjectResult(e.Message);
+            return new BadRequestObjectResult(ToJson(e.Message));
         }
 
         Console.WriteLine(e.Message);
@@ -67,11 +73,11 @@ public class ApiExceptionHandler
     {
         if(DerivesFrom(e,typeof(InvalidUsernameException)))
         {
-            return new BadRequestObjectResult(e.Message);
+            return new BadRequestObjectResult(ToJson(e.Message));
         } 
         else if (DerivesFrom(e,typeof(InvalidPasswordException)))
         {
-            return new BadRequestObjectResult(e.Message);
+            return new BadRequestObjectResult(ToJson(e.Message));
         } 
 
         Console.WriteLine(e.Message);
@@ -84,7 +90,7 @@ public class ApiExceptionHandler
 
         if(exceptionType == typeof(UsernameAlreadyTakenException))
         {
-            return new BadRequestObjectResult(e.Message);
+            return new BadRequestObjectResult(ToJson(e.Message));
         } 
 
         Console.WriteLine(e.Message);
