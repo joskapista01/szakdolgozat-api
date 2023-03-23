@@ -21,17 +21,6 @@ public class UserService : IUserService
     public void RegisterUser(RegisterUserRequest request)
     {
         UserRegistration.ValidateNewCredentials(request.username, request.password);
-        try 
-        {
-            _databaseClient.addUser(request.username, request.password);
-        }
-        catch(Exception e)
-        {
-            throw new DatabaseException(e.Message);
-        }
-        
+        _databaseClient.addUser(request.username, request.password);
     }
-
-
-
 }
