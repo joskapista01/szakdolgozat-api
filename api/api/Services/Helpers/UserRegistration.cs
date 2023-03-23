@@ -14,6 +14,7 @@ public class UserRegistration
         try
         {
             TextChecker.MinLength(username, 4);
+            TextChecker.MaxLength(username,16);
             TextChecker.IsAlphaNumeric(username);
         }
         catch(TextCheckerException e)
@@ -29,6 +30,7 @@ public class UserRegistration
         try
         {
             TextChecker.MinLength(password, 8);
+            TextChecker.MaxLength(password,24);
             TextChecker.IsAlphaNumeric(password);
             TextChecker.ContainsNumber(password); 
             TextChecker.ContainsSmallLetter(password); 
@@ -36,7 +38,7 @@ public class UserRegistration
         }
         catch(TextCheckerException e)
         {
-            throw new InvalidProgramException("Invalid password! Password " + e.Message);
+            throw new InvalidPasswordException("Invalid password! Password " + e.Message);
         }
     }
 
