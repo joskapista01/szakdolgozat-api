@@ -14,7 +14,7 @@ public class ApiExceptionHandler
 
     private static string ToJson(string message)
     {
-        return "{\"message:\": \""+ message+"\"}";
+        return "{\"message\": \""+ message+"\"}";
     }
 
     public static IActionResult HandleException(Exception e)
