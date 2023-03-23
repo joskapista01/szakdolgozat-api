@@ -13,7 +13,7 @@ public class ServerCreation
         }
         catch(TextCheckerException e)
         {
-            throw new CreateServerException("Invalid server name! Server name " + e.Message);
+            throw new InvalidServerNameException("Invalid server name! Server name " + e.Message);
         }
     }
 }
