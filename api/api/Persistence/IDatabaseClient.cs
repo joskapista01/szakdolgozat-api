@@ -18,11 +18,13 @@ namespace api.Persistence
 
         public User getUserCreds(string user);
 
-        public bool addUser(string user, string password);
+        public void addUser(string user, string password);
 
         public bool updateServerStatus(string user, string id, string status);
 
         public List<Server> getActiveServers();
+
+        public bool IsPortAllocated(int port);
 
     }
 }

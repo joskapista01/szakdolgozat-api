@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Models;
+using api.Exceptions;
 
 namespace api.Persistence
 {
@@ -61,18 +62,17 @@ namespace api.Persistence
             
         }
 
-        public bool addUser(string username, string password)
+        public void addUser(string username, string password)
         {
             lock(users)
             {
                 if(users.FirstOrDefault(e => e.username == username) != null)
-                    return false;
+                    throw new RegisterUserException("Username already taken!");
 
                 User user = new User(username, password);
                 users.Add(user);
             }
 
-            return true;
         }
 
         public bool updateServerStatus(string id, string user, string status){
@@ -94,6 +94,14 @@ namespace api.Persistence
             {
                 List<Server> result = servers.FindAll(s => s.serverStatus == "ON").ToList();
                 return result;
+            }
+        }
+
+        public bool IsPortAllocated(int port)
+        {
+            lock(servers)
+            {
+                return servers.FindIndex(e => e.serverPort==port) >= 0;
             }
         }
     }

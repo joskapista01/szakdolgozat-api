@@ -2,6 +2,12 @@ namespace api.Services;
 
 using api.Contracts.api;
 using api.Persistence;
+using api.Exceptions;
+using System;
+
+using api.Services.Helpers;
+
+
 
 public class UserService : IUserService
 {
@@ -14,6 +20,18 @@ public class UserService : IUserService
 
     public void RegisterUser(RegisterUserRequest request)
     {
-        _databaseClient.addUser(request.username, request.password);
+        UserRegistration.ValidateNewCredentials(request.username, request.password);
+        try 
+        {
+            _databaseClient.addUser(request.username, request.password);
+        }
+        catch(Exception e)
+        {
+            throw new DatabaseException(e.Message);
+        }
+        
     }
+
+
+
 }
