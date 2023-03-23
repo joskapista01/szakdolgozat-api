@@ -102,7 +102,7 @@ public class ServerService : IServerService
         return new GetServerResponse(serverInfo.id, serverInfo.serverName, serverMonitorData.playerCount, serverInfo.serverStatus, serverMonitorData.state, (serverInfo.serverUrl+":"+serverInfo.serverPort)); 
 
     }
-    public void CreateServer(CreateServerRequest request, string user)
+    public async void CreateServer(CreateServerRequest request, string user)
     {   
         ServerCreation.ValidateServerName(request.name);     
 
@@ -115,23 +115,23 @@ public class ServerService : IServerService
 
         Server server = new Server(serverId, user, request.name, createdAt, serverUrl, serverPort, serverStatus);
 
-        _serverDeployer.CreateServer(serverId, serverPort);
+        await _serverDeployer.CreateServer(serverId, serverPort);
         _databaseClient.createServer(server);
     }
 
-    public void UpdateServer(string id,string user)
+    public async void UpdateServer(string id,string user)
     {
         Server serverInfo = _databaseClient.getServerInfo(id,user);
         if(serverInfo is null) return;
 
         (string new_status, int replicaCount) = serverInfo.serverStatus == "ON" ? ("OFF",0) : ("ON",1);
 
-        _serverDeployer.UpdateServer(id, replicaCount);
+        await _serverDeployer.UpdateServer(id, replicaCount);
         _databaseClient.updateServerStatus(id,user,new_status);
     }
-    public void DeleteServer(string id,string user)
+    public async void DeleteServer(string id,string user)
     {
-        _serverDeployer.DeleteServer(id);
+        await _serverDeployer.DeleteServer(id);
         _databaseClient.deleteServer(id,user);
     }
 }
