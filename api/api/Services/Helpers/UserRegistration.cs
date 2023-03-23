@@ -18,7 +18,7 @@ public class UserRegistration
         }
         catch(TextCheckerException e)
         {
-            throw new RegisterUserException("Invalid username! Username " + e.Message);
+            throw new InvalidUsernameException("Invalid username! Username " + e.Message);
         }
 
 
@@ -36,7 +36,7 @@ public class UserRegistration
         }
         catch(TextCheckerException e)
         {
-            throw new RegisterUserException("Invalid password! Password " + e.Message);
+            throw new InvalidProgramException("Invalid password! Password " + e.Message);
         }
     }
 
