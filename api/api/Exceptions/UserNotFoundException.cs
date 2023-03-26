@@ -1,6 +1,6 @@
 namespace api.Exceptions;
 
-public class UserNotFoundException : DatabaseException {
+public class UserNotFoundException : AuthenticationException {
     
     public UserNotFoundException() { }
 
