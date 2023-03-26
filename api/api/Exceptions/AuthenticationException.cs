@@ -1,12 +1,12 @@
 namespace api.Exceptions;
 
-public class ApiException : Exception {
+public class AuthenticationException : Exception {
     
-    public ApiException() { }
+    public AuthenticationException() { }
 
-    public ApiException(string message)
+    public AuthenticationException(string message)
         : base(message) { }
 
-    public ApiException(string message, Exception inner)
+    public AuthenticationException(string message, Exception inner)
         : base(message, inner) { }
 }
