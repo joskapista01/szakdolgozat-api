@@ -8,23 +8,23 @@ namespace api.Persistence
 {
     public interface IDatabaseClient
     {
-        public bool createServer(Server server);
+        public Task<bool> createServer(Server server);
 
-        public bool deleteServer(string id, string user);
+        public Task<bool> deleteServer(string id, string user);
 
-        public List<string> getServerList(string user);
+        public Task<List<string>> getServerList(string user);
 
-        public Server getServerInfo(string id, string user);
+        public Task<Server> getServerInfo(string id, string user);
 
-        public User getUserCreds(string user);
+        public Task<User> getUserCreds(string user);
 
-        public void addUser(string user, string password);
+        public Task<bool> addUser(User user);
 
-        public bool updateServerStatus(string user, string id, string status);
+        public Task<bool> updateServerStatus(string user, string id, string status);
 
-        public List<Server> getActiveServers();
+        public Task<List<Server>> getActiveServers();
 
-        public bool IsPortAllocated(int port);
+        public Task<bool> IsPortAllocated(int port);
 
     }
 }

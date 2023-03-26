@@ -35,6 +35,9 @@ namespace api.Monitoring
                 string responseBody = await response.Content.ReadAsStringAsync();
                 var responseData = JsonSerializer.Deserialize<ServerMonitorResponse>(responseBody);
 
+                if(responseData is null)
+                    throw new MonitorException("[ERROR] No body found in request to monitor");
+
                 string status = responseData.alive == true ? "online" : "offline";
                 int playerCount = responseData.playerCount is not null ? int.Parse(responseData.playerCount) : 0;
 

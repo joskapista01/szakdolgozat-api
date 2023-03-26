@@ -27,6 +27,11 @@ public class BasicAuthHandler : AuthenticationHandler<AuthenticationSchemeOption
                 return AuthenticateResult.Fail("Header not found!");
 
             var headerValue = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
+
+            if(headerValue.Parameter is null)
+                return AuthenticateResult.Fail("Unauthorized");
+
+
             var bytes = Convert.FromBase64String(headerValue.Parameter);
             string credentials = Encoding.UTF8.GetString(bytes);
             if(!string.IsNullOrEmpty(credentials)){
@@ -34,7 +39,7 @@ public class BasicAuthHandler : AuthenticationHandler<AuthenticationSchemeOption
                 string username = array[0];
                 string password = array[1];
                 
-                User userCreds = _databaseClient.getUserCreds(username);
+                User userCreds = await _databaseClient.getUserCreds(username);
                 if(userCreds == null || password != userCreds.password)
                     return AuthenticateResult.Fail("Unauthorized");
 
@@ -48,7 +53,7 @@ public class BasicAuthHandler : AuthenticationHandler<AuthenticationSchemeOption
                 
             }
 
-            return AuthenticateResult.Fail("Unauthorizedddd");
+            return AuthenticateResult.Fail("Unauthorized");
             
         }
 }

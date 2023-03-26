@@ -4,6 +4,7 @@ using api.Contracts.api;
 using api.Persistence;
 using api.Exceptions;
 using System;
+using api.Models;
 
 using api.Services.Helpers;
 
@@ -21,6 +22,9 @@ public class UserService : IUserService
     public void RegisterUser(RegisterUserRequest request)
     {
         UserRegistration.ValidateNewCredentials(request.username, request.password);
-        _databaseClient.addUser(request.username, request.password);
+        
+        User user = new User(request.username, request.password);
+
+        _databaseClient.addUser(user);
     }
 }

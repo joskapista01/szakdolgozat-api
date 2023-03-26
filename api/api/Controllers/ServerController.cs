@@ -22,12 +22,12 @@ public class ServerController : ControllerBase
     }   
 
     [HttpGet("/servers")]
-    public IActionResult GetServerList()
+    public async Task<IActionResult> GetServerList()
     {
         try 
         {
             string user = RequestHeaders.GetCurrentUser(Request);
-            var response = _serverService.GetServerList(user);
+            var response = await _serverService.GetServerList(user);
             return Ok(response);
         }
         catch (Exception e)

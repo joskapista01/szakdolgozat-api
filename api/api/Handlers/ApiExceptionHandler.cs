@@ -91,6 +91,11 @@ public class ApiExceptionHandler
     private static IActionResult HandleDatabaseException(DatabaseException e)
     {
 
+        if(DerivesFrom(e, typeof(ServerNotFoundException)))
+        {
+            return new NotFoundObjectResult(ToJson(e.Message));
+        }
+
         Console.WriteLine(e.Message);
         return new StatusCodeResult(StatusCodes.Status500InternalServerError); 
     }
