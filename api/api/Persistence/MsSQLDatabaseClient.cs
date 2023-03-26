@@ -27,15 +27,16 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     private void CreateServersTable()
     {
-        string sql = @"CREATE TABLE IF NOT EXISTS servers (
-            id varchar(255), 
-            user varchar(255),
-            serverName varchar(255), 
-            createdAt date, 
-            serverUrl varchar(255), 
-            serverPort int,
-            serverStatus varchar(255)
-        );";
+        string sql = @"IF OBJECT_ID(N'servers', N'U') IS NULL
+            CREATE TABLE servers (
+                id varchar(255), 
+                user varchar(255),
+                serverName varchar(255), 
+                createdAt date, 
+                serverUrl varchar(255), 
+                serverPort int,
+                serverStatus varchar(255)
+            );";
         
         SqlCommand command = new SqlCommand(sql, databaseConnection);
         command.ExecuteNonQuery();
@@ -44,10 +45,11 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     private void CreateUsersTable()
     {
-        string sql = @"CREATE TABLE IF NOT EXISTS users (
-            username varchar(255),
-            password varchar(255)
-        );";
+        string sql = @"IF OBJECT_ID(N'users', N'U') IS NULL
+            CREATE TABLE users (
+                username varchar(255),
+                password varchar(255)
+            );";
 
         SqlCommand command = new SqlCommand(sql, databaseConnection);
         command.ExecuteNonQuery();
