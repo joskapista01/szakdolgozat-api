@@ -10,13 +10,12 @@ namespace api.Persistence;
 
 public class MsSQLDatabaseClient : IDatabaseClient
 {
-    private SqlConnection databaseConnection;
+    private string connectionString;
     public MsSQLDatabaseClient(SqlConnectionStringBuilder builder)
     {
-        databaseConnection = new SqlConnection(builder.ConnectionString);
-        databaseConnection.Open();
+        connectionString = builder.ConnectionString;
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         CreateTables();
-        databaseConnection.Close();
     }
 
     private void CreateTables()
@@ -28,6 +27,8 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     private void CreateServersTable()
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
+        databaseConnection.Open();
         string sql = @"IF OBJECT_ID(N'servers', N'U') IS NULL
             CREATE TABLE servers (
                 id varchar(255), 
@@ -41,11 +42,14 @@ public class MsSQLDatabaseClient : IDatabaseClient
         
         SqlCommand command = new SqlCommand(sql, databaseConnection);
         command.ExecuteNonQuery();
+        databaseConnection.Close();
 
     }
 
     private void CreateUsersTable()
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
+        databaseConnection.Open();
         string sql = @"IF OBJECT_ID(N'users', N'U') IS NULL
             CREATE TABLE users (
                 username varchar(255),
@@ -54,6 +58,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
         SqlCommand command = new SqlCommand(sql, databaseConnection);
         command.ExecuteNonQuery();
+        databaseConnection.Close();
 
     }
 
@@ -98,6 +103,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
     }
     public async Task<bool> createServer(Server server)
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         try
         {
             databaseConnection.Open();
@@ -122,6 +128,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<bool> deleteServer(string id, string user)
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         try
         {
             databaseConnection.Open();
@@ -145,6 +152,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<List<string>> getServerList(string user)
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         try
         {
             databaseConnection.Open();
@@ -175,6 +183,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<Server> getServerInfo(string id, string user)
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         try
         {
             databaseConnection.Open();
@@ -205,6 +214,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<User> getUserCreds(string username)
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         try
         {
             databaseConnection.Open();
@@ -235,6 +245,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<bool> addUser(User user)
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         try
         {
             databaseConnection.Open();
@@ -266,6 +277,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<bool> updateServerStatus(string user, string id, string status)
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         try
         {
             databaseConnection.Open();
@@ -291,6 +303,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<List<Server>> getActiveServers()
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         try
         {
             databaseConnection.Open();
@@ -319,6 +332,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<bool> IsPortAllocated(int port)
     {
+        SqlConnection databaseConnection = new SqlConnection(connectionString);
         try
         {
             databaseConnection.Open();
