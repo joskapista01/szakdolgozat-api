@@ -102,7 +102,6 @@ public class MsSQLDatabaseClient : IDatabaseClient
         {
             databaseConnection.Open();
             string sql = "INSERT INTO servers VALUES (" + ServerToString(server) + ")";
-            Console.WriteLine(sql);
             SqlCommand command = new SqlCommand(sql, databaseConnection);
 
             await command.ExecuteNonQueryAsync();
@@ -179,7 +178,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
         try
         {
             databaseConnection.Open();
-            string sql = "SELECT * FROM servers WHERE id = '" + id + "' username = '" + user + "'";
+            string sql = "SELECT * FROM servers WHERE id = '" + id + "' and username = '" + user + "'";
             SqlCommand command = new SqlCommand(sql, databaseConnection);
 
             SqlDataReader reader = await command.ExecuteReaderAsync();
