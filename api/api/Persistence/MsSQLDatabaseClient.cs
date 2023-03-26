@@ -257,10 +257,10 @@ public class MsSQLDatabaseClient : IDatabaseClient
                 throw new UsernameAlreadyTakenException("Username already taken!");
 
         
-            sql = "INSERT INTO servers VALUES (" + UserToString(user) + ")";
+            sql = "INSERT INTO users VALUES (" + UserToString(user) + ")";
             command = new SqlCommand(sql, databaseConnection);
 
-            await command.ExecuteNonQueryAsync();
+            var result = await command.ExecuteNonQueryAsync();
             databaseConnection.Close();
 
             return true;

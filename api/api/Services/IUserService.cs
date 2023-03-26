@@ -3,5 +3,5 @@ using api.Contracts.api;
 
 public interface IUserService
 {
-    public void RegisterUser(RegisterUserRequest request);
+    public Task<bool> RegisterUser(RegisterUserRequest request);
 }
