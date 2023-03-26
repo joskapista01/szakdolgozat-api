@@ -157,7 +157,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
         SqlDataReader reader = await command.ExecuteReaderAsync();
 
         if(!reader.HasRows)
-            throw new UserNotFoundException("User "+ username +" not found");
+            throw new UserNotFoundException("Login failed!");
 
         reader.Read();
 

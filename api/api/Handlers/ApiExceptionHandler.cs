@@ -94,6 +94,9 @@ public class ApiExceptionHandler
         if(DerivesFrom(e, typeof(ServerNotFoundException)))
         {
             return new NotFoundObjectResult(ToJson(e.Message));
+        } else if(DerivesFrom(e, typeof(UserNotFoundException)))
+        {
+            return new UnauthorizedObjectResult(ToJson(e.Message));
         }
 
         Console.WriteLine(e.Message);
