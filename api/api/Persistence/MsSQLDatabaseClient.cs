@@ -294,7 +294,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
         try
         {
             databaseConnection.Open();
-            string sql = "SELECT * FROM servers WHERE serverStatus = ON";
+            string sql = "SELECT * FROM servers WHERE serverStatus = 'ON'";
             SqlCommand command = new SqlCommand(sql, databaseConnection);
             SqlDataReader reader = await command.ExecuteReaderAsync();
 
