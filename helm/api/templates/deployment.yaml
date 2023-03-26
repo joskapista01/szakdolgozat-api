@@ -38,7 +38,7 @@ spec:
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: database_password
+                  name: database-password
                   key: DATABASE_PASSWORD
             - name: BUILD_VERSION
               value: {{ quote .Values.buildVersion }}
