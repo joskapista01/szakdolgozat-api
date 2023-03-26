@@ -107,7 +107,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<bool> deleteServer(string id, string user)
     {
-        string sql = "DELETE FROM servers WHERE id = " + id + " and user = " + user;
+        string sql = "DELETE FROM servers WHERE id = '" + id + "' and username = '" + user + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
         await command.ExecuteNonQueryAsync();
@@ -117,7 +117,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<List<string>> getServerList(string user)
     {
-        string sql = "SELECT id FROM servers WHERE user = " + user;
+        string sql = "SELECT id FROM servers WHERE username = '" + user + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
         SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -134,7 +134,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<Server> getServerInfo(string id, string user)
     {
-        string sql = "SELECT * FROM servers WHERE id = " + id + " user = " + user;
+        string sql = "SELECT * FROM servers WHERE id = '" + id + "' username = '" + user + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
         SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -151,7 +151,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<User> getUserCreds(string username)
     {
-        string sql = "SELECT * FROM users WHERE username = " + username;
+        string sql = "SELECT * FROM users WHERE username = '" + username + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
         SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -168,7 +168,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<bool> addUser(User user)
     {
-        string sql = "SELECT * FROM users WHERE username = " + user.username;
+        string sql = "SELECT * FROM users WHERE username = '" + user.username + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
         SqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -186,7 +186,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<bool> updateServerStatus(string user, string id, string status)
     {
-        string sql = "UPDATE servers SET serverStatus = " + status + " WHERE user = " + user + " and id = " + id;
+        string sql = "UPDATE servers SET serverStatus = '" + status + "' WHERE username = '" + user + "' and id = '" + id + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
         int rows = await command.ExecuteNonQueryAsync();
@@ -213,7 +213,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
 
     public async Task<bool> IsPortAllocated(int port)
     {
-        string sql = "SELECT * FROM servers WHERE serverPort = " + port;
+        string sql = "SELECT * FROM servers WHERE serverPort = '" + port+"'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
         SqlDataReader reader = await command.ExecuteReaderAsync();
 
