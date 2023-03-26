@@ -256,6 +256,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
             if(reader.HasRows)
                 throw new UsernameAlreadyTakenException("Username already taken!");
 
+            reader.Close();
         
             sql = "INSERT INTO users VALUES (" + UserToString(user) + ")";
             command = new SqlCommand(sql, databaseConnection);
