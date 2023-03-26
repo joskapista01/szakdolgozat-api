@@ -62,8 +62,8 @@ public class MsSQLDatabaseClient : IDatabaseClient
         return 
             "'" + server.id + "', '"+ 
             server.user + "', '" + 
-            server.serverName + "', " + 
-            server.createdAt + ", '" + 
+            server.serverName + "', '" + 
+            server.createdAt + "', '" + 
             server.serverUrl + "', " +
             server.serverPort + ", '" +
             server.serverStatus + "'";
