@@ -1,6 +1,7 @@
 using api.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using System.Data.Common;
 
 namespace api.Handlers;
 
@@ -21,6 +22,11 @@ public class ApiExceptionHandler
     {
         if(DerivesFrom(e, typeof(ApiException)))
                 return ApiExceptionHandler.HandleApiException((ApiException) e);
+        
+        if(DerivesFrom(e, typeof(DbException)) && e.InnerException is not null)
+            return ApiExceptionHandler.HandleApiException((ApiException) e.InnerException);
+
+        
 
         Console.WriteLine(e.Message);
         return new StatusCodeResult(StatusCodes.Status500InternalServerError);
