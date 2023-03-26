@@ -23,11 +23,11 @@ public class UserController : ControllerBase
 
 
     [HttpPost("/users/register")]
-    public IActionResult RegisterUser(RegisterUserRequest request)
+    public async Task<IActionResult> RegisterUser(RegisterUserRequest request)
     {
         try {
-            _userService.RegisterUser(request);
-            return Ok(request);
+            var result = await _userService.RegisterUser(request);
+            return Ok();
         }
         catch (Exception e)
         {

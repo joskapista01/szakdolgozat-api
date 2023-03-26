@@ -19,12 +19,12 @@ public class UserService : IUserService
         _databaseClient = databaseClient;
     }
 
-    public void RegisterUser(RegisterUserRequest request)
+    public async Task<bool> RegisterUser(RegisterUserRequest request)
     {
         UserRegistration.ValidateNewCredentials(request.username, request.password);
         
         User user = new User(request.username, request.password);
 
-        _databaseClient.addUser(user);
+        return await _databaseClient.addUser(user);
     }
 }
