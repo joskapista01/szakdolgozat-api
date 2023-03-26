@@ -102,6 +102,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
         {
             databaseConnection.Open();
             string sql = "INSERT INTO servers VALUES (" + ServerToString(server) + ")";
+            Console.WriteLine(sql);
             SqlCommand command = new SqlCommand(sql, databaseConnection);
 
             await command.ExecuteNonQueryAsync();
