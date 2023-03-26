@@ -60,13 +60,13 @@ public class MsSQLDatabaseClient : IDatabaseClient
     private string ServerToString(Server server)
     {
         return 
-            server.id + ", "+ 
-            server.user + ", " + 
-            server.serverName + ", " + 
-            server.createdAt + ", " + 
-            server.serverUrl + ", " +
-            server.serverPort + ", " +
-            server.serverStatus;
+            "'" + server.id + "', '"+ 
+            server.user + "', '" + 
+            server.serverName + "', " + 
+            server.createdAt + ", '" + 
+            server.serverUrl + "', " +
+            server.serverPort + ", '" +
+            server.serverStatus + "'";
     }
 
     private Server getServerFromSql(SqlDataReader reader)
@@ -85,8 +85,8 @@ public class MsSQLDatabaseClient : IDatabaseClient
     private string UserToString(User user)
     {
         return 
-            user.username + ", "+ 
-            user.password;
+            "'"+user.username + "', '"+ 
+            user.password+"'";
     }
 
     private User getUserFromSql(SqlDataReader reader)
