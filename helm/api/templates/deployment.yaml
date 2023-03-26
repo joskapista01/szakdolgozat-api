@@ -35,6 +35,11 @@ spec:
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: {{ .Values.aspnetcore_environment }}
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                name: database_password
+                key: DATABASE_PASSWORD
             - name: BUILD_VERSION
               value: {{ quote .Values.buildVersion }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}

@@ -24,11 +24,11 @@ public class ServerService : IServerService
         Task.Run(() => ServerHealthCheck());
     }
     
-    private int GetNextId()
+    private async Task<int> GetNextId()
     {
         for(int port = ServerConventions.START_PORT; port<=ServerConventions.END_PORT; port++)
         {
-            if(!_databaseClient.IsPortAllocated(port))
+            if(!await _databaseClient.IsPortAllocated(port))
                 return port;
         }
         throw new OutOfPortsException("Run out of free ports!");
@@ -48,7 +48,7 @@ public class ServerService : IServerService
             try
             {
                 Thread.Sleep(ServerConventions.SERVER_CHECK_INTERVAL);
-                List<Server> activeServers = _databaseClient.getActiveServers();
+                List<Server> activeServers = await _databaseClient.getActiveServers();
 
 
 
@@ -65,7 +65,7 @@ public class ServerService : IServerService
                             if(currentTime - serverCatalog[0][server.id] >= ServerConventions.SERVER_MAXIMUM_IDLE_TIME)
                             {
                                 Console.WriteLine("goof");
-                                UpdateServer(server.id, server.user);
+                                await UpdateServer(server.id, server.user);
                             }
                             else
                             {
@@ -90,14 +90,15 @@ public class ServerService : IServerService
         }
     }
 
-    public GetServerListResponse GetServerList(string user)
+    public async Task<GetServerListResponse> GetServerList(string user)
     {
-        List<String> serverIds = _databaseClient.getServerList(user);
+        List<String> serverIds = await _databaseClient.getServerList(user);
         return new GetServerListResponse(serverIds);
     }
     public async Task<GetServerResponse> GetServerInfo(string id,string user)
     {
-        Server serverInfo = _databaseClient.getServerInfo(id,user);
+        Server serverInfo = await _databaseClient.getServerInfo(id,user);
+
         ServerMonitorData serverMonitorData = await _serverMonitor.GetServerState(ServerConventions.GetServerHostname(id),ServerConventions.DEFAULT_SERVER_PORT); 
 
         return new GetServerResponse(serverInfo.id, serverInfo.serverName, serverMonitorData.playerCount, serverInfo.serverStatus, serverMonitorData.state, (serverInfo.serverUrl+":"+serverInfo.serverPort)); 
@@ -107,7 +108,7 @@ public class ServerService : IServerService
     {   
         ServerCreation.ValidateServerName(request.name);     
 
-        string serverId = GetNextId().ToString();
+        string serverId = (await GetNextId()).ToString();
         string serverName = request.name;
         DateTime createdAt = DateTime.Now;
         string serverUrl = "servers.minecraft-hosting.io";
@@ -117,26 +118,24 @@ public class ServerService : IServerService
         Server server = new Server(serverId, user, request.name, createdAt, serverUrl, serverPort, serverStatus);
 
         var response = await _serverDeployer.CreateServer(serverId, serverPort);
-        _databaseClient.createServer(server);
+        await _databaseClient.createServer(server);
         return response;
     }
 
     public async Task<HttpStatusCode> UpdateServer(string id,string user)
     {
-        Server serverInfo = _databaseClient.getServerInfo(id,user);
-        if(serverInfo is null) 
-            throw new DatabaseException("Server info is null!");
+        Server serverInfo = await _databaseClient.getServerInfo(id,user);
 
         (string new_status, int replicaCount) = serverInfo.serverStatus == "ON" ? ("OFF",0) : ("ON",1);
 
         var response = await _serverDeployer.UpdateServer(id, replicaCount);
-        _databaseClient.updateServerStatus(id,user,new_status);
+        await _databaseClient.updateServerStatus(id,user,new_status);
         return response;
     }
     public async Task<HttpStatusCode> DeleteServer(string id,string user)
     {
         var response = await _serverDeployer.DeleteServer(id);
-        _databaseClient.deleteServer(id,user);
+        await _databaseClient.deleteServer(id,user);
         return response;
     }
 }
