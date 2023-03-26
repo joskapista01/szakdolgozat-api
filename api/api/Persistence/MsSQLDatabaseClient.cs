@@ -275,7 +275,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
         }
     }
 
-    public async Task<bool> updateServerStatus(string user, string id, string status)
+    public async Task<bool> updateServerStatus(string id, string user, string status)
     {
         SqlConnection databaseConnection = new SqlConnection(connectionString);
         try

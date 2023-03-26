@@ -20,7 +20,7 @@ namespace api.Persistence
 
         public Task<bool> addUser(User user);
 
-        public Task<bool> updateServerStatus(string user, string id, string status);
+        public Task<bool> updateServerStatus(string id, string user, string status);
 
         public Task<List<Server>> getActiveServers();
 
