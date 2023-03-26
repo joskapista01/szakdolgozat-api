@@ -98,146 +98,246 @@ public class MsSQLDatabaseClient : IDatabaseClient
     }
     public async Task<bool> createServer(Server server)
     {
-        databaseConnection.Open();
-        string sql = "INSERT INTO servers VALUES (" + ServerToString(server) + ")";
-        SqlCommand command = new SqlCommand(sql, databaseConnection);
+        try
+        {
+            databaseConnection.Open();
+            string sql = "INSERT INTO servers VALUES (" + ServerToString(server) + ")";
+            SqlCommand command = new SqlCommand(sql, databaseConnection);
 
-        await command.ExecuteNonQueryAsync();
-        databaseConnection.Close();
+            await command.ExecuteNonQueryAsync();
+            databaseConnection.Close();
 
-        return true;
+            return true;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            databaseConnection.Close();
+        }
+
     }
 
     public async Task<bool> deleteServer(string id, string user)
     {
-        databaseConnection.Open();
-        string sql = "DELETE FROM servers WHERE id = '" + id + "' and username = '" + user + "'";
-        SqlCommand command = new SqlCommand(sql, databaseConnection);
+        try
+        {
+            databaseConnection.Open();
+            string sql = "DELETE FROM servers WHERE id = '" + id + "' and username = '" + user + "'";
+            SqlCommand command = new SqlCommand(sql, databaseConnection);
 
-        await command.ExecuteNonQueryAsync();
-        databaseConnection.Close();
+            await command.ExecuteNonQueryAsync();
+            databaseConnection.Close();
 
-        return true;
+            return true;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            databaseConnection.Close();
+        }
     }
 
     public async Task<List<string>> getServerList(string user)
     {
-        databaseConnection.Open();
-        string sql = "SELECT id FROM servers WHERE username = '" + user + "'";
-        SqlCommand command = new SqlCommand(sql, databaseConnection);
-
-        SqlDataReader reader = await command.ExecuteReaderAsync();
-
-        List<string> serverIds = new List<string>();
-
-        while(reader.Read())
+        try
         {
-            serverIds.Add(reader.GetString(0));
-        }
-        databaseConnection.Close();
+            databaseConnection.Open();
+            string sql = "SELECT id FROM servers WHERE username = '" + user + "'";
+            SqlCommand command = new SqlCommand(sql, databaseConnection);
 
-        return serverIds;
+            SqlDataReader reader = await command.ExecuteReaderAsync();
+
+            List<string> serverIds = new List<string>();
+
+            while(reader.Read())
+            {
+                serverIds.Add(reader.GetString(0));
+            }
+            databaseConnection.Close();
+
+            return serverIds;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            databaseConnection.Close();
+        }
     }
 
     public async Task<Server> getServerInfo(string id, string user)
     {
-        databaseConnection.Open();
-        string sql = "SELECT * FROM servers WHERE id = '" + id + "' username = '" + user + "'";
-        SqlCommand command = new SqlCommand(sql, databaseConnection);
+        try
+        {
+            databaseConnection.Open();
+            string sql = "SELECT * FROM servers WHERE id = '" + id + "' username = '" + user + "'";
+            SqlCommand command = new SqlCommand(sql, databaseConnection);
 
-        SqlDataReader reader = await command.ExecuteReaderAsync();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
 
-        if(!reader.HasRows)
-            throw new ServerNotFoundException("Server "+ id +" not found");
+            if(!reader.HasRows)
+                throw new ServerNotFoundException("Server "+ id +" not found");
 
-        reader.Read();
+            reader.Read();
 
-        Server server = getServerFromSql(reader);
-        databaseConnection.Close();
+            Server server = getServerFromSql(reader);
+            databaseConnection.Close();
 
-        return server;
+            return server;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            databaseConnection.Close();
+        }
     }
 
     public async Task<User> getUserCreds(string username)
     {
-        databaseConnection.Open();
-        string sql = "SELECT * FROM users WHERE username = '" + username + "'";
-        SqlCommand command = new SqlCommand(sql, databaseConnection);
+        try
+        {
+            databaseConnection.Open();
+            string sql = "SELECT * FROM users WHERE username = '" + username + "'";
+            SqlCommand command = new SqlCommand(sql, databaseConnection);
 
-        SqlDataReader reader = await command.ExecuteReaderAsync();
+            SqlDataReader reader = await command.ExecuteReaderAsync();
 
-        if(!reader.HasRows)
-            throw new UserNotFoundException("Login failed!");
+            if(!reader.HasRows)
+                throw new UserNotFoundException("Login failed!");
 
-        reader.Read();
+            reader.Read();
 
-        User user = getUserFromSql(reader);
-        databaseConnection.Close();
+            User user = getUserFromSql(reader);
+            databaseConnection.Close();
 
-        return user;
+            return user;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            databaseConnection.Close();
+        }
     }
 
     public async Task<bool> addUser(User user)
     {
-        databaseConnection.Open();
-        string sql = "SELECT * FROM users WHERE username = '" + user.username + "'";
-        SqlCommand command = new SqlCommand(sql, databaseConnection);
-        SqlDataReader reader = await command.ExecuteReaderAsync();
+        try
+        {
+            databaseConnection.Open();
+            string sql = "SELECT * FROM users WHERE username = '" + user.username + "'";
+            SqlCommand command = new SqlCommand(sql, databaseConnection);
+            SqlDataReader reader = await command.ExecuteReaderAsync();
 
-        if(reader.HasRows)
-            throw new UsernameAlreadyTakenException("Username already taken!");
+            if(reader.HasRows)
+                throw new UsernameAlreadyTakenException("Username already taken!");
 
-    
-        sql = "INSERT INTO servers VALUES (" + UserToString(user) + ")";
-        command = new SqlCommand(sql, databaseConnection);
+        
+            sql = "INSERT INTO servers VALUES (" + UserToString(user) + ")";
+            command = new SqlCommand(sql, databaseConnection);
 
-        await command.ExecuteNonQueryAsync();
-        databaseConnection.Close();
+            await command.ExecuteNonQueryAsync();
+            databaseConnection.Close();
 
-        return true;
+            return true;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            databaseConnection.Close();
+        }
     }
 
     public async Task<bool> updateServerStatus(string user, string id, string status)
     {
-        databaseConnection.Open();
-        string sql = "UPDATE servers SET serverStatus = '" + status + "' WHERE username = '" + user + "' and id = '" + id + "'";
-        SqlCommand command = new SqlCommand(sql, databaseConnection);
+        try
+        {
+            databaseConnection.Open();
+            string sql = "UPDATE servers SET serverStatus = '" + status + "' WHERE username = '" + user + "' and id = '" + id + "'";
+            SqlCommand command = new SqlCommand(sql, databaseConnection);
 
-        int rows = await command.ExecuteNonQueryAsync();
-        if(rows == 0)
-            throw new ServerNotFoundException("Server " + id + " not found");
-        databaseConnection.Close();
+            int rows = await command.ExecuteNonQueryAsync();
+            if(rows == 0)
+                throw new ServerNotFoundException("Server " + id + " not found");
+            databaseConnection.Close();
 
-        return true;
+            return true;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            databaseConnection.Close();
+        }
     }
 
     public async Task<List<Server>> getActiveServers()
     {
-        databaseConnection.Open();
-        string sql = "SELECT * FROM servers WHERE serverStatus = ON";
-        SqlCommand command = new SqlCommand(sql, databaseConnection);
-        SqlDataReader reader = await command.ExecuteReaderAsync();
-
-        List<Server> activeServers = new List<Server>();
-
-        while(reader.Read())
+        try
         {
-            activeServers.Add(getServerFromSql(reader));
+            databaseConnection.Open();
+            string sql = "SELECT * FROM servers WHERE serverStatus = ON";
+            SqlCommand command = new SqlCommand(sql, databaseConnection);
+            SqlDataReader reader = await command.ExecuteReaderAsync();
+
+            List<Server> activeServers = new List<Server>();
+
+            while(reader.Read())
+            {
+                activeServers.Add(getServerFromSql(reader));
+            }
+            databaseConnection.Close();
+            return activeServers;
         }
-        databaseConnection.Close();
-        return activeServers;
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            databaseConnection.Close();
+        }
     }
 
     public async Task<bool> IsPortAllocated(int port)
     {
-        databaseConnection.Open();
-        string sql = "SELECT * FROM servers WHERE serverPort = '" + port+"'";
-        SqlCommand command = new SqlCommand(sql, databaseConnection);
-        SqlDataReader reader = await command.ExecuteReaderAsync();
-        bool result = reader.HasRows;
-        databaseConnection.Close();
+        try
+        {
+            databaseConnection.Open();
+            string sql = "SELECT * FROM servers WHERE serverPort = '" + port+"'";
+            SqlCommand command = new SqlCommand(sql, databaseConnection);
+            SqlDataReader reader = await command.ExecuteReaderAsync();
+            bool result = reader.HasRows;
+            databaseConnection.Close();
 
-        return result;
+            return result;
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+        finally
+        {
+            databaseConnection.Close();
+        }
     }
 
 }
