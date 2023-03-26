@@ -16,7 +16,7 @@ public class RESTServerDeployer : IServerDeployer {
     public RESTServerDeployer(string deployerAddress)
     {
         client.BaseAddress  = new Uri(deployerAddress);
-        client.Timeout = TimeSpan.FromMilliseconds(500);
+        client.Timeout = TimeSpan.FromMilliseconds(2000);
     }
 
     public async Task<HttpStatusCode> CreateServer(string serverId, int serverPort)
