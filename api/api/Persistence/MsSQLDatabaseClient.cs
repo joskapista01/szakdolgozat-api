@@ -30,7 +30,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
         string sql = @"IF OBJECT_ID(N'servers', N'U') IS NULL
             CREATE TABLE servers (
                 id varchar(255), 
-                user varchar(255),
+                username varchar(255),
                 serverName varchar(255), 
                 createdAt date, 
                 serverUrl varchar(255), 
