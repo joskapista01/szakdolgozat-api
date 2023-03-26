@@ -118,8 +118,9 @@ public class ServerService : IServerService
         Server server = new Server(serverId, user, request.name, createdAt, serverUrl, serverPort, serverStatus);
 
         var response = await _serverDeployer.CreateServer(serverId, serverPort);
-        await _databaseClient.createServer(server);
-        return response;
+        if(await _databaseClient.createServer(server))
+            return response;
+        else return HttpStatusCode.InternalServerError;
     }
 
     public async Task<HttpStatusCode> UpdateServer(string id,string user)
@@ -129,13 +130,15 @@ public class ServerService : IServerService
         (string new_status, int replicaCount) = serverInfo.serverStatus == "ON" ? ("OFF",0) : ("ON",1);
 
         var response = await _serverDeployer.UpdateServer(id, replicaCount);
-        await _databaseClient.updateServerStatus(id,user,new_status);
-        return response;
+        if(await _databaseClient.updateServerStatus(id,user,new_status))
+            return response;
+        else return HttpStatusCode.InternalServerError;
     }
     public async Task<HttpStatusCode> DeleteServer(string id,string user)
     {
         var response = await _serverDeployer.DeleteServer(id);
-        await _databaseClient.deleteServer(id,user);
-        return response;
+        if(await _databaseClient.deleteServer(id,user))
+            return response;
+        else return HttpStatusCode.InternalServerError;
     }
 }
