@@ -16,6 +16,7 @@ public class MsSQLDatabaseClient : IDatabaseClient
         databaseConnection = new SqlConnection(builder.ConnectionString);
         databaseConnection.Open();
         CreateTables();
+        databaseConnection.Close();
     }
 
     private void CreateTables()
@@ -97,26 +98,31 @@ public class MsSQLDatabaseClient : IDatabaseClient
     }
     public async Task<bool> createServer(Server server)
     {
+        databaseConnection.Open();
         string sql = "INSERT INTO servers VALUES (" + ServerToString(server) + ")";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
         await command.ExecuteNonQueryAsync();
+        databaseConnection.Close();
 
         return true;
     }
 
     public async Task<bool> deleteServer(string id, string user)
     {
+        databaseConnection.Open();
         string sql = "DELETE FROM servers WHERE id = '" + id + "' and username = '" + user + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
         await command.ExecuteNonQueryAsync();
+        databaseConnection.Close();
 
         return true;
     }
 
     public async Task<List<string>> getServerList(string user)
     {
+        databaseConnection.Open();
         string sql = "SELECT id FROM servers WHERE username = '" + user + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
@@ -128,12 +134,14 @@ public class MsSQLDatabaseClient : IDatabaseClient
         {
             serverIds.Add(reader.GetString(0));
         }
+        databaseConnection.Close();
 
         return serverIds;
     }
 
     public async Task<Server> getServerInfo(string id, string user)
     {
+        databaseConnection.Open();
         string sql = "SELECT * FROM servers WHERE id = '" + id + "' username = '" + user + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
@@ -145,12 +153,14 @@ public class MsSQLDatabaseClient : IDatabaseClient
         reader.Read();
 
         Server server = getServerFromSql(reader);
+        databaseConnection.Close();
 
         return server;
     }
 
     public async Task<User> getUserCreds(string username)
     {
+        databaseConnection.Open();
         string sql = "SELECT * FROM users WHERE username = '" + username + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
@@ -162,12 +172,14 @@ public class MsSQLDatabaseClient : IDatabaseClient
         reader.Read();
 
         User user = getUserFromSql(reader);
+        databaseConnection.Close();
 
         return user;
     }
 
     public async Task<bool> addUser(User user)
     {
+        databaseConnection.Open();
         string sql = "SELECT * FROM users WHERE username = '" + user.username + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
         SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -180,24 +192,28 @@ public class MsSQLDatabaseClient : IDatabaseClient
         command = new SqlCommand(sql, databaseConnection);
 
         await command.ExecuteNonQueryAsync();
+        databaseConnection.Close();
 
         return true;
     }
 
     public async Task<bool> updateServerStatus(string user, string id, string status)
     {
+        databaseConnection.Open();
         string sql = "UPDATE servers SET serverStatus = '" + status + "' WHERE username = '" + user + "' and id = '" + id + "'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
 
         int rows = await command.ExecuteNonQueryAsync();
         if(rows == 0)
             throw new ServerNotFoundException("Server " + id + " not found");
+        databaseConnection.Close();
 
         return true;
     }
 
     public async Task<List<Server>> getActiveServers()
     {
+        databaseConnection.Open();
         string sql = "SELECT * FROM servers WHERE serverStatus = ON";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
         SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -208,16 +224,20 @@ public class MsSQLDatabaseClient : IDatabaseClient
         {
             activeServers.Add(getServerFromSql(reader));
         }
+        databaseConnection.Close();
         return activeServers;
     }
 
     public async Task<bool> IsPortAllocated(int port)
     {
+        databaseConnection.Open();
         string sql = "SELECT * FROM servers WHERE serverPort = '" + port+"'";
         SqlCommand command = new SqlCommand(sql, databaseConnection);
         SqlDataReader reader = await command.ExecuteReaderAsync();
+        bool result = reader.HasRows;
+        databaseConnection.Close();
 
-        return reader.HasRows;
+        return result;
     }
 
 }
