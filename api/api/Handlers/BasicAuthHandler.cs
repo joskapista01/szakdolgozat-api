@@ -9,8 +9,19 @@ using System.Security.Claims;
 
 namespace api.Handlers;
 
+/// <summary>
+/// Handler for Basic Authentication.
+/// </summary>
 public class BasicAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BasicAuthHandler"/> class.
+    /// </summary>
+    /// <param name="options">The monitor for the authentication scheme options.</param>
+    /// <param name="logger">The logger factory.</param>
+    /// <param name="encoder">The encoder for URL encoding.</param>
+    /// <param name="clock">The system clock.</param>
+    /// <param name="databaseClient">The database client.</param>
     public BasicAuthHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> option, 
         ILoggerFactory logger, 
@@ -21,6 +32,10 @@ public class BasicAuthHandler : AuthenticationHandler<AuthenticationSchemeOption
 
         private IDatabaseClient _databaseClient;
 
+        /// <summary>
+        /// Authenticates the request using basic authentication.
+        /// </summary>
+        /// <returns>An asynchronous operation that returns an instance of <see cref="AuthenticateResult"/> when completed.</returns>
         protected async override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             try
