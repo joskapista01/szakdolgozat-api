@@ -10,6 +10,9 @@ using api.Exceptions;
 
 namespace api.Monitoring
 {
+    /// <summary>
+    /// Implementation of IServerMonitor that uses REST API to monitor the server state
+    /// </summary>
     public class RESTServerMonitor : IServerMonitor
     {
         private class ServerMonitorResponse
@@ -18,12 +21,24 @@ namespace api.Monitoring
             public string? playerCount { get; set; }
         }
         private HttpClient client = new HttpClient();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RESTServerMonitor"/> class
+        /// </summary>
+        /// <param name="deployerAddress">The address of the deployer to be monitored</param>
         public RESTServerMonitor(string deployerAddress)
         {   
             client.BaseAddress  = new Uri(deployerAddress);
             client.Timeout = TimeSpan.FromMilliseconds(500);
         }
         
+                /// <summary>
+        /// Gets the current state of a server
+        /// </summary>
+        /// <param name="hostname">The hostname of the server to be monitored</param>
+        /// <param name="port">The port of the server to be monitored</param>
+        /// <returns>The current state of the server</returns>
+        /// <exception cref="MonitorException">Thrown when the connection to the monitor fails</exception>
         public async Task<ServerMonitorData> GetServerState(string hostname, int port)
         {
             try
