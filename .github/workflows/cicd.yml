@@ -19,7 +19,7 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        run: dotnet api restore
+        run: dotnet restore api
       - name: Test
         run: dotnet test api --no-restore --verbosity normal
         
