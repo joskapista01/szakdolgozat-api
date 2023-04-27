@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "api\api.csproj", "{23BD215E-8E36-4C86-9428-1CC6E8E966C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api", "api\api.csproj", "{23BD215E-8E36-4C86-9428-1CC6E8E966C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api.Contracts", "api.Contracts\api.Contracts.csproj", "{14EC6E8F-828D-4BD8-850E-21E3881FE678}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api.Contracts", "api.Contracts\api.Contracts.csproj", "{14EC6E8F-828D-4BD8-850E-21E3881FE678}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api.Tests", "api.Tests\api.Tests.csproj", "{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{23BD215E-8E36-4C86-9428-1CC6E8E966C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,5 +43,23 @@ Global
 		{14EC6E8F-828D-4BD8-850E-21E3881FE678}.Release|x64.Build.0 = Release|Any CPU
 		{14EC6E8F-828D-4BD8-850E-21E3881FE678}.Release|x86.ActiveCfg = Release|Any CPU
 		{14EC6E8F-828D-4BD8-850E-21E3881FE678}.Release|x86.Build.0 = Release|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Debug|x64.Build.0 = Debug|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Debug|x86.Build.0 = Debug|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Release|x64.ActiveCfg = Release|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Release|x64.Build.0 = Release|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Release|x86.ActiveCfg = Release|Any CPU
+		{4C549C79-2CF7-426C-8FBB-CE55D9E7675D}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8FCCB2C9-34A3-4C46-8C67-16AC17A7331C}
 	EndGlobalSection
 EndGlobal
