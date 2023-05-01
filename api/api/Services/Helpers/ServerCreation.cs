@@ -9,6 +9,7 @@ public class ServerCreation
         try
         {
             TextChecker.MinLength(serverName, 1); 
+            TextChecker.MaxLength(serverName, 24);
             TextChecker.IsAlphaNumeric(serverName);
         }
         catch(TextCheckerException e)
