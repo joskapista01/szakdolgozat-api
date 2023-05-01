@@ -187,7 +187,9 @@ namespace api.Persistence
                 string sql = "DELETE FROM servers WHERE id = '" + id + "' and username = '" + user + "'";
                 SqlCommand command = new SqlCommand(sql, databaseConnection);
 
-                await command.ExecuteNonQueryAsync();
+                int rows = await command.ExecuteNonQueryAsync();
+                if(rows == 0)
+                    throw new ServerNotFoundException("Server " + id + " not found");
                 databaseConnection.Close();
 
                 return true;
