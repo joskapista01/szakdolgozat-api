@@ -101,13 +101,13 @@ namespace api.Controllers
         /// <param name="id">The ID of the server to update.</param>
         /// <returns>The result of the server update operation.</returns>
         [HttpPut("/server/{id}")]
-        public IActionResult UpdateServer(string id)
+        public async Task<IActionResult> UpdateServer(string id)
         {
             try
             {
                 string user = RequestHeaders.GetCurrentUser(Request);
 
-                _serverService.UpdateServer(id, user);
+                await _serverService.UpdateServer(id, user);
 
                 return Ok(id);
             }
@@ -123,12 +123,12 @@ namespace api.Controllers
         /// <param name="id">The ID of the server to delete.</param>
         /// <returns>The result of the server deletion operation.</returns>
         [HttpDelete("/server/{id}")]
-        public IActionResult DeleteServer(string id) {
+        public async Task<IActionResult> DeleteServer(string id) {
             try
             {
                 string user = RequestHeaders.GetCurrentUser(Request);
 
-                _serverService.DeleteServer(id, user);
+                await _serverService.DeleteServer(id, user);
 
                 return Ok(id);
             }
