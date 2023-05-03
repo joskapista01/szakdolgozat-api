@@ -82,7 +82,7 @@ namespace api.Handlers
         }
 
         /// <summary>
-        /// Handles the given CreateServerException and returns an IActionResult representing the appropriate HTTP response.
+        /// Handles the exceptions that occur during server creation.
         /// </summary>
         /// <param name="e">The CreateServerException to handle.</param>
         /// <returns>An IActionResult representing the appropriate HTTP response.</returns>
@@ -143,7 +143,7 @@ namespace api.Handlers
         }
 
     /// <summary>
-    /// Handles exceptions thrown by the Monitor.
+    /// Handles exceptions thrown by the monitor client.
     /// </summary>
     /// <param name="e">The MonitorException that was thrown.</param>
     /// <returns>An IActionResult representing the response to the exception.</returns>
@@ -154,7 +154,7 @@ namespace api.Handlers
         }
 
         /// <summary>
-        /// Handles exceptions thrown by the Deployer.
+        /// Handles exceptions thrown by the deployer client.
         /// </summary>
         /// <param name="e">The DeployerException that was thrown.</param>
         /// <returns>An IActionResult representing the response to the exception.</returns>
