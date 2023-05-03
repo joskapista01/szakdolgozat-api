@@ -365,7 +365,6 @@ namespace api.Persistence
             {
                 databaseConnection.Open();
                 string sql = "UPDATE servers SET serverStatus = '" + status + "' WHERE username = '" + user + "' and id = '" + id + "'";
-                Console.WriteLine(sql);
                 SqlCommand command = new SqlCommand(sql, databaseConnection);
 
                 int rows = await command.ExecuteNonQueryAsync();
