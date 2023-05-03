@@ -25,7 +25,7 @@ namespace api.Tests.UserTests
 
             bool result = await _userService.RegisterUser(request);
 
-            Assert.AreEqual(true, result);
+            Assert.That(result, Is.EqualTo(true));
 
         }
 
@@ -44,7 +44,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(UsernameAlreadyTakenException));
+                Assert.That(typeof(UsernameAlreadyTakenException), Is.EqualTo(e.GetType()));
             }
         }
 
@@ -62,7 +62,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(InvalidUsernameException));
+                Assert.That(typeof(InvalidUsernameException), Is.EqualTo(e.GetType()));
             }
         }
 
@@ -80,7 +80,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(InvalidUsernameException));
+                Assert.That(typeof(InvalidUsernameException), Is.EqualTo(e.GetType()));
             }
         }
 
@@ -98,7 +98,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(InvalidUsernameException));
+                Assert.That(typeof(InvalidUsernameException), Is.EqualTo(e.GetType()));
             }
         }
 
@@ -116,7 +116,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(InvalidPasswordException));
+                Assert.That(typeof(InvalidPasswordException), Is.EqualTo(e.GetType()));
             }
         }
         [Test]
@@ -133,7 +133,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(InvalidPasswordException));
+                Assert.That(typeof(InvalidPasswordException), Is.EqualTo(e.GetType()));
             }
         }
 
@@ -151,7 +151,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(InvalidPasswordException));
+                Assert.That(typeof(InvalidPasswordException), Is.EqualTo(e.GetType()));
             }
         }
 
@@ -169,7 +169,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(InvalidPasswordException));
+                Assert.That(typeof(InvalidPasswordException), Is.EqualTo(e.GetType()));
             }
         }
 
@@ -187,7 +187,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(InvalidPasswordException));
+                Assert.That(typeof(InvalidPasswordException), Is.EqualTo(e.GetType()));
             }
         }
 
@@ -205,7 +205,7 @@ namespace api.Tests.UserTests
             }
             catch (Exception e)
             {
-                Assert.AreEqual(e.GetType(), typeof(InvalidPasswordException));
+                Assert.That(typeof(InvalidPasswordException), Is.EqualTo(e.GetType()));
             }
         }
     }
