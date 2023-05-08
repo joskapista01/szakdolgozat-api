@@ -35,7 +35,7 @@ public class TextChecker
     public static void ContainsSmallLetter(string text)
     {
         if(!text.Any(char.IsLower))
-            throw new TextCheckerException("must contain at least small letter!");
+            throw new TextCheckerException("must contain at least one small letter!");
 
     }
 
